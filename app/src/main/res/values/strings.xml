@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">MyTravelCompany</string>
+
+    //login screen
+    <string name="login_screen_language">Español , España</string>
+    <string name="login_screen_password">Contraseña</string>
+    <string name="login_screen_email">Usuario, correo electrónico o móvil</string>
+    <string name="login_screen_forgot_password">¿Has olvidado la contraseña?</string>
+    <string name="login_screen_init_session">Iniciar sesión</string>
+    <string name="login_screen_new_account">Crear una nueva cuenta</string>
+
+    <string name="register_screen_phone_new_account">¿Cual es tu número de móvil?</string>
+    <string name="register_screen_email_new_account">¿Cual es tu correo electrónico?</string>
+    <string name="register_screen_phone_info">Introduce tu número móvil de contacto, nadie lo verá en tu perfil</string>
+    <string name="register_screen_email_info">Introduce tu correo electrónico, nadie lo verá en tu perfil</string>
+    <string name="register_screen_phone_number">Número de móvil</string>
+    <string name="register_screen_email_number">Correo electrónico</string>
+    <string name="register_screen_phone_security">Puede que recibas notificaciones nuestras por Whatsapp y por SMS por motivos de seguridad y para iniciar sesión</string>
+    <string name="register_screen_email_security">También te enviaremos correo electrónico. Puedes cancelar esta opción cuando quieras</string>
+    <string name="register_screen_next">Siguiente</string>
+    <string name="register_screen_with_email">Registrate con tu correo electrónico</string>
+    <string name="register_screen_with_phone">Registrate con tu teléfono móvil</string>
+
+
+</resources>
