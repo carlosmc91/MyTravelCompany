@@ -14,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,7 +28,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _mainUiState = MutableStateFlow(MainUiState())
-    val mainUiState: StateFlow<MainUiState> = _mainUiState
+    val mainUiState: StateFlow<MainUiState> = _mainUiState.asStateFlow()
 
     init {
         loadUserSession()
@@ -45,11 +46,15 @@ class MainViewModel @Inject constructor(
     private fun loadBanners() {
         viewModelScope.launch {
             _mainUiState.update { it.copy(isLoadingBanners = true) }
-            getBannersUseCase().onSuccess { banners ->
-                _mainUiState.update { it.copy(banners = banners, isLoadingBanners = false) }
+            // Ahora nos suscribimos al Flow de banners
+            getBannersUseCase().collect { banners ->
+                _mainUiState.update { 
+                    it.copy(
+                        banners = banners, 
+                        isLoadingBanners = false 
+                    ) 
+                }
                 preloadImages(banners)
-            }.onFailure {
-                _mainUiState.update { it.copy(isLoadingBanners = false) }
             }
         }
     }

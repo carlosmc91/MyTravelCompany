@@ -1,7 +1,8 @@
 package com.cmc.mytravelcompany.domain.repository
 
 import com.cmc.mytravelcompany.domain.entity.BannerEntity
+import kotlinx.coroutines.flow.Flow
 
 interface BannerRepository {
-    suspend fun getBanners(): Result<List<BannerEntity>>
+    fun getBanners(): Flow<List<BannerEntity>>
 }

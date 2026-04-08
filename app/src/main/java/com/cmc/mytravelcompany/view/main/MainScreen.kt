@@ -14,16 +14,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,9 +28,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -42,84 +37,61 @@ import coil.compose.AsyncImage
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import com.cmc.mytravelcompany.domain.entity.BannerEntity
-import com.cmc.mytravelcompany.view.core.components.CmcButtonBorder
-import kotlinx.coroutines.launch
-
 
 @Composable
-fun MainScreen(mainViewModel: MainViewModel = hiltViewModel(), onPressDiscover: () -> Unit) {
+fun MainScreen(
+    mainViewModel: MainViewModel = hiltViewModel(),
+    onOpenDrawer: () -> Unit,
+) {
     val uiState by mainViewModel.mainUiState.collectAsStateWithLifecycle()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
     val deepGoldStart = MaterialTheme.colorScheme.primary
     val deepGoldEnd = MaterialTheme.colorScheme.background
 
-    MyNavigationDrawer(drawerState, uiState) {
-        Scaffold(
-            topBar = {
-                MyTopAppBar {
-                    scope.launch {
-                        drawerState.open()
-                    }
-                }
-            }, containerColor = Color.Transparent
-        ) { padding ->
-            Box(modifier = Modifier.fillMaxSize()) {
-                Box(
+    Scaffold(
+        topBar = {
+            MyTopAppBar {
+                onOpenDrawer()
+            }
+        }, containerColor = Color.Transparent
+    ) { padding ->
+
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(deepGoldStart, deepGoldEnd)
+                        )
+                    )
+            )
+
+            Column {
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .fillMaxHeight(0.6f)
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(deepGoldStart, deepGoldEnd)
-                            )
+                        .padding(top = padding.calculateTopPadding())
+                ) {
+                    if (uiState.isLoadingBanners) {
+                        Box(
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(color = Color.White)
+                        }
+                    } else if (uiState.banners.isNotEmpty()) {
+                        BannerPager(
+                            banners = uiState.banners, modifier = Modifier.fillMaxSize()
                         )
-                )
-
-                Column() {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(0.6f)
-                            .padding(top = padding.calculateTopPadding())
-
-                    ) {
-                        if (uiState.isLoadingBanners) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                CircularProgressIndicator(color = Color.White)
-                            }
-                        } else if (uiState.banners.isNotEmpty()) {
-                            BannerPager(
-                                banners = uiState.banners, modifier = Modifier.fillMaxSize()
-                            )
-                        } else {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(text = "No hay promociones disponibles", color = Color.White)
-                            }
+                    } else {
+                        Box(
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                        ) {
+                            Text(text = "No hay promociones disponibles", color = Color.White)
                         }
                     }
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        TransitoursHeader()
-
-                        CmcButtonBorder(
-                            "Descúbrelo",
-                            onClick = { onPressDiscover() },
-                            paddingValues = PaddingValues(
-                                5.dp
-                            ),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
                 }
-
             }
         }
     }
@@ -197,42 +169,7 @@ fun BannerItem(banner: BannerEntity) {
                     maxLines = 1
                 )
             }
-
-
         }
     }
 }
 
-@Composable
-fun TransitoursHeader() {
-    var bigFontSize by remember { mutableStateOf(80.sp) }
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp), contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "Transitours", style = TextStyle(
-                fontSize = bigFontSize,
-                fontWeight = FontWeight.Black,
-                color = Color.LightGray.copy(alpha = 0.3f),
-                letterSpacing = (-2).sp
-            ), maxLines = 1, softWrap = false, onTextLayout = { textLayoutResult ->
-                if (textLayoutResult.didOverflowWidth) {
-                    bigFontSize *= 0.9f
-                }
-            })
-
-        Text(
-            text = "¿Por qué viajar con nosotros?",
-            style = TextStyle(
-                fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black
-            ),
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 20.dp)
-        )
-
-
-    }
-}

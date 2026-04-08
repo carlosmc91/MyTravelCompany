@@ -25,17 +25,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -43,49 +45,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.cmc.mytravelcompany.R
 import com.cmc.mytravelcompany.domain.entity.BenefitEntity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BenefitScreen(
-    benefitsViewModel: BenefitsViewModel = hiltViewModel(),
-    onBack: () -> Unit
+    benefitsViewModel: BenefitsViewModel = hiltViewModel(), onPressBackArrow: () -> Unit
 ) {
     val uiState by benefitsViewModel.uiState.collectAsStateWithLifecycle()
     val deepGoldStart = MaterialTheme.colorScheme.primary
     val deepGoldEnd = MaterialTheme.colorScheme.background
 
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Image(
-                        painter = painterResource(R.drawable.logo),
-                        contentDescription = "Logo",
-                        modifier = Modifier.height(40.dp)
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Transparent
-                )
-            )
-        },
-        containerColor = Color.Transparent
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize()) {
             Box(
@@ -99,15 +77,12 @@ fun BenefitScreen(
                     )
             )
 
-            if (uiState.isLoading) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator(color = Color.White)
-                }
-            } else {
+            Column(modifier = Modifier.padding(padding)) {
+                TransitoursHeader()
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(padding),
+                        .padding(8.dp),
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -115,20 +90,19 @@ fun BenefitScreen(
                         BenefitItem(
                             benefit = benefit,
                             isExpanded = uiState.expandedBenefitId == benefit.id,
-                            onClicked = { benefitsViewModel.onBenefitClicked(benefit.id) }
-                        )
+                            onClicked = { benefitsViewModel.onBenefitClicked(benefit.id) })
                     }
                 }
             }
+
         }
     }
+
 }
 
 @Composable
 fun BenefitItem(
-    benefit: BenefitEntity,
-    isExpanded: Boolean,
-    onClicked: () -> Unit
+    benefit: BenefitEntity, isExpanded: Boolean, onClicked: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -139,26 +113,23 @@ fun BenefitItem(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
 
-        ), border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer)
-    ) {
+        ),
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer)) {
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(8.dp)
                 .fillMaxWidth()
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
             ) {
                 benefit.icon?.let { iconRes ->
                     Box(
                         modifier = Modifier
                             .size(50.dp)
                             .background(
-                                MaterialTheme.colorScheme.primaryContainer,
-                                RoundedCornerShape(8.dp)
-                            ),
-                        contentAlignment = Alignment.Center
+                                MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(8.dp)
+                            ), contentAlignment = Alignment.Center
                     ) {
                         Image(
                             painter = painterResource(id = iconRes),
@@ -201,4 +172,33 @@ fun BenefitItem(
             }
         }
     }
+}
+
+@Composable
+fun TransitoursHeader() {
+    var bigFontSize by remember { mutableStateOf(80.sp) }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(),contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Transitours", style = TextStyle(
+                    fontSize = bigFontSize,
+                    fontWeight = FontWeight.Black,
+                    color = Color.LightGray.copy(alpha = 0.3f),
+                    letterSpacing = (-2).sp
+                ), maxLines = 1, softWrap = false, onTextLayout = { textLayoutResult ->
+                    if (textLayoutResult.didOverflowWidth) {
+                        bigFontSize *= 0.9f
+                    }
+                })
+
+            Text(
+                text = "¿Por qué viajar con nosotros?", style = TextStyle(
+                    fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black
+                ), textAlign = TextAlign.Center, modifier = Modifier.padding(top = 20.dp)
+            )
+        }
+
 }

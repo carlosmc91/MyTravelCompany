@@ -40,6 +40,11 @@ android {
     }
 }
 
+// Configuración para solucionar el error de KSP con Room
+ksp {
+    arg("room.generateKotlin", "true")
+}
+
 dependencies {
     //Core
     implementation(libs.androidx.core.ktx)
@@ -53,7 +58,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.compose.runtime.livedata)
-    implementation(platform(libs.androidx.compose.bom))
 
     //Navigation
     implementation(libs.navigation.compose)
@@ -83,6 +87,11 @@ dependencies {
 
     //dataStore
     implementation(libs.androidx.datastore.preferences)
+
+    //Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     //Testing
     testImplementation(libs.junit)
