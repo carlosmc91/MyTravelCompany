@@ -2,6 +2,7 @@ package com.cmc.mytravelcompany.view.core.navigation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.cmc.mytravelcompany.domain.entity.UserEntity
 import com.cmc.mytravelcompany.domain.usecase.GetSession
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -12,19 +13,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SessionViewModel @Inject constructor(
-    getSession: GetSession
+    private val getSession: GetSession
 ) : ViewModel() {
-    val sessionState: StateFlow<SessionState> = getSession().map { user ->
-        if (user != null) SessionState.Logged else SessionState.NotLogged
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = SessionState.Loading
-    )
+
+    val sessionState: StateFlow<SessionState> = getSession()
+        .map { user ->
+            if (user != null) SessionState.Logged(user) else SessionState.NotLogged
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = SessionState.Loading
+        )
 }
 
 sealed class SessionState {
     object Loading : SessionState()
-    object Logged : SessionState()
+    data class Logged(val user: UserEntity) : SessionState()
     object NotLogged : SessionState()
 }

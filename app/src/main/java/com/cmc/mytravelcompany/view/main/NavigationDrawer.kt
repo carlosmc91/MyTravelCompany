@@ -1,7 +1,6 @@
 package com.cmc.mytravelcompany.view.main
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,7 +64,7 @@ fun MyNavigationDrawer(
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         alignment = Alignment.BottomCenter,
-                        modifier = Modifier.matchParentSize() // Se ajusta al tamaño total de la cabecera
+                        modifier = Modifier.matchParentSize()
                     )
                     // Contenido (Textos)
                     Column(
@@ -90,7 +90,7 @@ fun MyNavigationDrawer(
                 Spacer(Modifier.height(12.dp))
                 
                 Text(
-                    "Mi Aplicación", 
+                    stringResource(R.string.navigation_drawer_travel_with_us),
                     modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
@@ -101,7 +101,7 @@ fun MyNavigationDrawer(
                 NavigationDrawerItem(
                     label = { 
                         Text(
-                            text = "Luna de miel",
+                            text = stringResource(R.string.navigation_drawer_moon),
                             fontWeight = if (selectedItem == 0) FontWeight.Bold else FontWeight.Normal,
                             fontSize = if (selectedItem == 0) 20.sp else 16.sp
                         ) 
@@ -114,15 +114,14 @@ fun MyNavigationDrawer(
                     colors = NavigationDrawerItemDefaults.colors(
                         selectedContainerColor = Color.Transparent,
                         unselectedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                    )
                 )
 
                 // Maldivas
                 NavigationDrawerItem(
                     label = { 
                         Text(
-                            text = "Maldivas",
+                            text = stringResource(R.string.navigation_drawer_maldivas),
                             fontWeight = if (selectedItem == 1) FontWeight.Bold else FontWeight.Normal,
                             fontSize = if (selectedItem == 1) 20.sp else 16.sp
                         ) 
@@ -135,15 +134,14 @@ fun MyNavigationDrawer(
                     colors = NavigationDrawerItemDefaults.colors(
                         selectedContainerColor = Color.Transparent,
                         unselectedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
                 )
 
                 // Japón
                 NavigationDrawerItem(
                     label = { 
                         Text(
-                            text = "Japón",
+                            text = stringResource(R.string.navigation_drawer_japan),
                             fontWeight = if (selectedItem == 2) FontWeight.Bold else FontWeight.Normal,
                             fontSize = if (selectedItem == 2) 20.sp else 16.sp
                         ) 
@@ -156,15 +154,14 @@ fun MyNavigationDrawer(
                     colors = NavigationDrawerItemDefaults.colors(
                         selectedContainerColor = Color.Transparent,
                         unselectedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
                 )
 
                 // Otros destinos
                 NavigationDrawerItem(
                     label = { 
                         Text(
-                            text = "Otros destinos",
+                            text = stringResource(R.string.navigation_drawer_others),
                             fontWeight = if (selectedItem == 3) FontWeight.Bold else FontWeight.Normal,
                             fontSize = if (selectedItem == 3) 20.sp else 16.sp
                         ) 
@@ -177,14 +174,13 @@ fun MyNavigationDrawer(
                     colors = NavigationDrawerItemDefaults.colors(
                         selectedContainerColor = Color.Transparent,
                         unselectedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
                 )
 
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 28.dp))
 
                 Text(
-                    "Opciones de interés",
+                    stringResource(R.string.navigation_drawer_options),
                     modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
@@ -195,7 +191,7 @@ fun MyNavigationDrawer(
                 NavigationDrawerItem(
                     label = { 
                         Text(
-                            text = "A medida",
+                            text = stringResource(R.string.navigation_drawer_solution),
                             fontWeight = if (selectedItem == 4) FontWeight.Bold else FontWeight.Normal,
                             fontSize = if (selectedItem == 4) 20.sp else 16.sp,
                             color = MaterialTheme.colorScheme.primary
@@ -209,15 +205,14 @@ fun MyNavigationDrawer(
                     colors = NavigationDrawerItemDefaults.colors(
                         selectedContainerColor = Color.Transparent,
                         unselectedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
                 )
                 
                 // ¿Quiénes somos?
                 NavigationDrawerItem(
                     label = { 
                         Text(
-                            text = "¿Quiénes somos?",
+                            text = stringResource(R.string.navigation_drawer_ask),
                             fontWeight = if (selectedItem == 5) FontWeight.Bold else FontWeight.Normal,
                             fontSize = if (selectedItem == 5) 20.sp else 16.sp,
                             color = MaterialTheme.colorScheme.primary
@@ -231,14 +226,13 @@ fun MyNavigationDrawer(
                     colors = NavigationDrawerItemDefaults.colors(
                         selectedContainerColor = Color.Transparent,
                         unselectedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
                 )
 
                 NavigationDrawerItem(
                     label = {
                         Text(
-                            text = "Dudas frecuentes",
+                            text = stringResource(R.string.navigation_drawer_frecuentes),
                             fontWeight = if (selectedItem == 6) FontWeight.Bold else FontWeight
                                 .Normal,
                             fontSize = if (selectedItem == 6) 20.sp else 16.sp,
@@ -253,8 +247,7 @@ fun MyNavigationDrawer(
                     colors = NavigationDrawerItemDefaults.colors(
                         selectedContainerColor = Color.Transparent,
                         unselectedContainerColor = Color.Transparent
-                    ),
-                    modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
                 )
             }
         },

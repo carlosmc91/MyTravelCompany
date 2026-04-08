@@ -65,9 +65,21 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     ksp(libs.hilt.android.compiler)
 
+    //Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore)
+    implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+
     //retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.adapter)
+
+    //Image Loading
+    implementation(libs.coil.compose)
 
     //dataStore
     implementation(libs.androidx.datastore.preferences)

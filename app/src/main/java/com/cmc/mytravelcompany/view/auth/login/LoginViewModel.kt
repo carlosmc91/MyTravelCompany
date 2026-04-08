@@ -4,52 +4,47 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cmc.mytravelcompany.domain.usecase.Login
-import com.cmc.mytravelcompany.domain.usecase.SaveSession
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(val login: Login, val saveSession: SaveSession) :
-    ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val login: Login
+) : ViewModel() {
+
     private val _loginUiState = MutableStateFlow(LoginUiState())
-    var loginUiState: StateFlow<LoginUiState> = _loginUiState
+    val loginUiState: StateFlow<LoginUiState> = _loginUiState.asStateFlow()
 
     fun onEmailChange(email: String) {
-        _loginUiState.update { state ->
-            state.copy(email = email)
-        }
+        _loginUiState.update { it.copy(email = email) }
         verifyLogin()
     }
 
     fun onPasswordChange(password: String) {
-        _loginUiState.update { state ->
-            state.copy(password = password)
-        }
+        _loginUiState.update { it.copy(password = password) }
         verifyLogin()
     }
 
     fun onClickInitSession() {
         viewModelScope.launch {
-            _loginUiState.update { it.copy(isLoading = true) }
+            _loginUiState.update { it.copy(isLoading = true, errorMessage = null) }
 
-            val userEntity = withContext(Dispatchers.IO) {
-                login.invoke(_loginUiState.value.email, _loginUiState.value.password)
-            }
-
-            userEntity?.let { user ->
-                saveSession(user)
-            }
-
-            _loginUiState.update { state ->
-                state.copy(
-                    goToMain = userEntity != null,
-                )
+            try {
+                // El UseCase ahora devuelve el UserEntity o lanza error
+                val userEntity = login(_loginUiState.value.email, _loginUiState.value.password)
+                
+                _loginUiState.update { 
+                    it.copy(isLoading = false, goToMain = userEntity != null) 
+                }
+            } catch (e: Exception) {
+                _loginUiState.update { 
+                    it.copy(isLoading = false, errorMessage = "Error: ${e.message}") 
+                }
             }
         }
     }
@@ -60,19 +55,20 @@ class LoginViewModel @Inject constructor(val login: Login, val saveSession: Save
         }
     }
 
-    fun isEmailValid(email: String): Boolean {
+    private fun isEmailValid(email: String): Boolean {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    fun isPasswordValid(password: String): Boolean {
-        return password.length > 6
+    private fun isPasswordValid(password: String): Boolean {
+        return password.length >= 6
     }
 }
 
 data class LoginUiState(
-    val email: String = "carlos@gmail.com",
-    val password: String = "4324523",
+    val email: String = "",
+    val password: String = "",
     val isLoading: Boolean = false,
     val isLoginEnabled: Boolean = false,
     val goToMain: Boolean = false,
+    val errorMessage: String? = null
 )

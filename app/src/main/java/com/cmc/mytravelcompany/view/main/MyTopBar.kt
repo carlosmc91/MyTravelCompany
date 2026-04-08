@@ -29,7 +29,7 @@ fun MyTopAppBar(onNavSelected: () -> Unit) {
                 Icon(
                     imageVector = Icons.Sharp.Menu,
                     contentDescription = "Menu",
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         })

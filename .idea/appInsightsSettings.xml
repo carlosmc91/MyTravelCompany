@@ -10,7 +10,7 @@
                 <ConnectionSetting>
                   <option name="appId" value="com.cmc.mytravelcompany" />
                   <option name="mobileSdkAppId" value="1:681575025178:android:da87285d8abc75ba13dfa3" />
-                  <option name="projectId" value="mytravelcompany" />
+                  <option name="projectId" value="mytravelcompanyapp" />
                   <option name="projectNumber" value="681575025178" />
                 </ConnectionSetting>
               </option>

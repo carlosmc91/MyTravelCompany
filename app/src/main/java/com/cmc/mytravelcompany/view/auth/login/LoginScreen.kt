@@ -1,13 +1,10 @@
 package com.cmc.mytravelcompany.view.auth.login
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,19 +21,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.autofill.ContentType
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cmc.mytravelcompany.R
 import com.cmc.mytravelcompany.view.core.components.CmcButtonBorder
 import com.cmc.mytravelcompany.view.core.components.CmcButtonPrimary
+import com.cmc.mytravelcompany.view.core.components.MyBackgroundRegister
 
 @Composable
 fun LoginScreen(
@@ -49,7 +43,6 @@ fun LoginScreen(
 
     LaunchedEffect(uiState.goToMain) {
         if (uiState.goToMain) {
-            Log.i("Paso por aquii", "Paso por aqui¡")
             onNavigateToMain()
         }
     }
@@ -84,25 +77,8 @@ fun LoginView(
     onLoginClick: () -> Unit,
     onNavigateToRegister: () -> Unit
 ) {
-    val GoldStart = MaterialTheme.colorScheme.background
-    val GoldEnd = Color(0xFFC7A15E)
-
     Scaffold { padding ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.8f)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(GoldEnd, GoldStart)
-                        )
-                    )
-                    .padding(padding)
-                    .padding(16.dp), contentAlignment = Alignment.Center
-            ) {
-            }
-        }
+        MyBackgroundRegister(padding)
         MyContent(
             padding, uiState, onEmailChange, onPasswordChange, onLoginClick, onNavigateToRegister
         )
@@ -130,7 +106,9 @@ fun MyContent(
         Spacer(Modifier.weight(0.5f))
 
         Image(
-            modifier = Modifier.fillMaxWidth().padding(40.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(40.dp),
             contentScale = androidx.compose.ui.layout.ContentScale.FillWidth,
             painter = painterResource(R.drawable.logo),
             contentDescription = "Logo"
@@ -155,6 +133,7 @@ fun MyContent(
             onValueChange = onPasswordChange,
             label = { Text(stringResource(R.string.login_screen_password)) },
             shape = RoundedCornerShape(15.dp),
+            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
 

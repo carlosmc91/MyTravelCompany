@@ -2,20 +2,35 @@ package com.cmc.mytravelcompany.view.core.navigation
 
 import kotlinx.serialization.Serializable
 
+@Serializable
+object Login
 
 @Serializable
-object Login{
-
-}
+object Register
 
 @Serializable
-object Register{
-
-}
+object Main
 
 @Serializable
-object Main{
+object Benefits
 
-}
+@Serializable
+object Moon
 
+@Serializable
+object Maldivas
 
+@Serializable
+object Japan
+
+@Serializable
+object Others
+
+@Serializable
+object Solution
+
+@Serializable
+object Ask
+
+@Serializable
+object Frecuentes

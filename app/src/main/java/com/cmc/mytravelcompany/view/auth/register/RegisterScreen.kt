@@ -1,5 +1,6 @@
 package com.cmc.mytravelcompany.view.auth.register
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,15 +11,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -33,38 +31,39 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cmc.mytravelcompany.R
 import com.cmc.mytravelcompany.view.core.components.CmcButtonBorder
 import com.cmc.mytravelcompany.view.core.components.CmcButtonPrimary
+import com.cmc.mytravelcompany.view.core.components.MyBackgroundRegister
 
 @OptIn(ExperimentalMaterial3Api::class)
 
 @Composable
-fun RegisterScreen(registerViewModel: RegisterViewModel = hiltViewModel()) {
+fun RegisterScreen(
+    registerViewModel: RegisterViewModel = hiltViewModel(), onPressBackArrow: () -> Unit
+) {
     val uiState by registerViewModel.registerUiState.collectAsStateWithLifecycle()
 
-    Scaffold(topBar = {
-        CenterAlignedTopAppBar(
-            title = { Text("") },
-            navigationIcon = {
-                IconButton(onClick = { /* Acción de volver */ }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }, colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background
-            )
-        )
-    }) { padding ->
+    Scaffold { padding ->
+        MyBackgroundRegister(padding)
         Column(
             modifier = Modifier
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Back",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.clickable() {
+                    onPressBackArrow()
+                })
+            Spacer(Modifier.size(14.dp))
             RegisterContent(
                 uiState = uiState,
                 onTextFieldChange = {
                     registerViewModel.onTextFieldChange(it)
+                },
+                onPasswordChange = { registerViewModel.osPasswordChange(it) },
+                onClickRegister = {
+                    registerViewModel.onClickRegister()
                 },
                 onChangeStep = {
                     registerViewModel.onStepChanged()
@@ -77,6 +76,8 @@ fun RegisterScreen(registerViewModel: RegisterViewModel = hiltViewModel()) {
 fun RegisterContent(
     uiState: RegisterUiState,
     onTextFieldChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onClickRegister: () -> Unit,
     onChangeStep: () -> Unit
 ) {
     val title: String
@@ -97,6 +98,7 @@ fun RegisterContent(
             keyboardType = KeyboardType.Phone
             textFieldValue = uiState.phone
         }
+
         RegisterStep.EMAIL -> {
             title = stringResource(R.string.register_screen_email_new_account)
             subTitle = stringResource(R.string.register_screen_email_info)
@@ -109,10 +111,8 @@ fun RegisterContent(
     }
 
     Text(
-        text = title,
-        style = TextStyle(
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+        text = title, style = TextStyle(
+            fontSize = 24.sp, fontWeight = FontWeight.Bold
         )
     )
     Spacer(modifier = Modifier.height(8.dp))
@@ -132,6 +132,20 @@ fun RegisterContent(
 
     Spacer(modifier = Modifier.height(16.dp))
 
+    if (uiState.isPasswordEnabled) {
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = uiState.password,
+            onValueChange = { onPasswordChange(it) },
+            label = { Text("Password") },
+            shape = RoundedCornerShape(15.dp),
+            visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+
     Text(
         text = securityText,
         style = MaterialTheme.typography.bodySmall,
@@ -141,10 +155,9 @@ fun RegisterContent(
     Spacer(Modifier.size(12.dp))
 
     CmcButtonPrimary(
-        text = stringResource(R.string.register_screen_next),
-        enabled = uiState.isButtonEnabled
+        text = stringResource(R.string.register_screen_next), enabled = uiState.isButtonEnabled
     ) {
-        // Acción de siguiente
+        onClickRegister()
     }
 
     Spacer(Modifier.size(16.dp))

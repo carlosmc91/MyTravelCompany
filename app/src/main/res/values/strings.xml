@@ -4,7 +4,7 @@
     //login screen
     <string name="login_screen_language">Español , España</string>
     <string name="login_screen_password">Contraseña</string>
-    <string name="login_screen_email">Usuario, correo electrónico o móvil</string>
+    <string name="login_screen_email">Correo electrónico o móvil</string>
     <string name="login_screen_forgot_password">¿Has olvidado la contraseña?</string>
     <string name="login_screen_init_session">Iniciar sesión</string>
     <string name="login_screen_new_account">Crear una nueva cuenta</string>
@@ -17,9 +17,54 @@
     <string name="register_screen_email_number">Correo electrónico</string>
     <string name="register_screen_phone_security">Puede que recibas notificaciones nuestras por Whatsapp y por SMS por motivos de seguridad y para iniciar sesión</string>
     <string name="register_screen_email_security">También te enviaremos correo electrónico. Puedes cancelar esta opción cuando quieras</string>
-    <string name="register_screen_next">Siguiente</string>
+    <string name="register_screen_next">Regístrate</string>
     <string name="register_screen_with_email">Registrate con tu correo electrónico</string>
     <string name="register_screen_with_phone">Registrate con tu teléfono móvil</string>
+
+    //beneficts
+    <string name="benefit_screen_agents_title">Agentes Especializados</string>
+    <string name="benefit_screen_agents_subtitle">EN VIAJES PERSONALIZADOS</string>
+    <string name="benefit_screen_agents_description">Nuestros agentes conocen al detalle todos los destinos con los que trabajamos para ayudarte a organizar tu gran viaje a medida. Cada viaje se diseña de acuerdo a tus preferencias y necesidades, asegurando una experiencia única y memorable.</string>
+
+    <string name="benefit_screen_covid_title">Seguro</string>
+    <string name="benefit_screen_covid_subtitle">COVID-19</string>
+    <string name="benefit_screen_covid_description">Tu seguridad es lo más importante. Ofrecemos un Seguro de Asistencia que incluye protección frente al Covid-19, con las mejores garantías del mercado, para que puedas disfrutar de tu viaje personalizado sin preocupaciones.</string>
+
+    <string name="benefit_screen_prices_title">Precios</string>
+    <string name="benefit_screen_prices_subtitle">INIGUALABLES</string>
+    <string name="benefit_screen_prices_description">Somos Agencia Mayorista, lo que nos permite ofrecer los precios más competitivos del mercado al no contar con intermediarios. Garantizamos precios finales frente a fluctuaciones del dólar, asegurándote el mejor valor para tus viajes a medida.</string>
+
+    <string name="benefit_screen_cancellation_title">Seguro</string>
+    <string name="benefit_screen_cancellation_subtitle">DE CANCELACIÓN</string>
+    <string name="benefit_screen_cancellation_description">El mejor Seguro de Viaje incluido, con asistencia médica ilimitada y cancelación de hasta 15.000€ por persona. Viaja con la tranquilidad de saber que estás cubierto en cualquier situación durante tu viaje personalizado.</string>
+
+    <string name="benefit_screen_airlines_title">Aerolineas</string>
+    <string name="benefit_screen_airlines_subtitle">PREMIUM</string>
+    <string name="benefit_screen_airlines_description">Trabajamos única y exclusivamente con las mejores aerolíneas para garantizar que no haya sorpresas y disfrutes de la mejor calidad en tus viajes a medida.</string>
+
+    <string name="benefit_screen_resorts_title">Contrato Directo</string>
+    <string name="benefit_screen_resorts_subtitle">CON RESORTS</string>
+    <string name="benefit_screen_resorts_description">Tenemos contrato directo con la mayoría de resorts en Maldivas, lo que nos permite ofrecerte los mejores precios y opciones para tus viajes personalizados.</string>
+
+    <string name="benefit_screen_custom_trips_title">Viajes a Medida</string>
+    <string name="benefit_screen_custom_trips_subtitle">Y EN PRIVADO</string>
+    <string name="benefit_screen_custom_trips_description">Diseñamos viajes a medida que se adaptan a cualquier solicitud, con la posibilidad de combinar varios destinos siempre a la carta. Cada itinerario se crea a tu medida, ofreciendo una experiencia exclusiva y personalizada.</string>
+
+    <string name="benefit_screen_assistance_title">Asistencia</string>
+    <string name="benefit_screen_assistance_subtitle">24H</string>
+    <string name="benefit_screen_assistance_description">Ofrecemos asistencia 24 horas para atender todo tipo de incidencia durante tu viaje personalizado, asegurando que tengas soporte continuo sin importar dónde te encuentres.</string>
+
+
+    <string name="navigation_drawer_frecuentes">Dudas frecuentes</string>
+    <string name="navigation_drawer_ask">¿Quiénes somos?</string>
+    <string name="navigation_drawer_solution">A medida</string>
+    <string name="navigation_why_us">¿Por qué nosotros?</string>
+    <string name="navigation_drawer_options">Opciones de interés</string>
+    <string name="navigation_drawer_others">Otros destinos</string>
+    <string name="navigation_drawer_japan">Japón</string>
+    <string name="navigation_drawer_maldivas">Maldivas</string>
+    <string name="navigation_drawer_moon">Luna de miel</string>
+    <string name="navigation_drawer_travel_with_us">Viaja con nosotros</string>
 
 
 </resources>

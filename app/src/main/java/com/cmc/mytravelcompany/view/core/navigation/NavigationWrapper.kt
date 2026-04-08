@@ -1,6 +1,5 @@
 package com.cmc.mytravelcompany.view.core.navigation
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.cmc.mytravelcompany.R
 import com.cmc.mytravelcompany.view.auth.login.LoginScreen
 import com.cmc.mytravelcompany.view.auth.register.RegisterScreen
+import com.cmc.mytravelcompany.view.benefits.BenefitScreen
 import com.cmc.mytravelcompany.view.main.MainScreen
 
 @Composable
@@ -39,7 +39,6 @@ fun NavigationWrapper(sessionViewModel: SessionViewModel = hiltViewModel()) {
                     LoginScreen(
                         onNavigateToRegister = { navController.navigate(Register) },
                         onNavigateToMain = {
-                            Log.i("Paso por aqerwruii", "Paso por aqui¡")
                             navController.navigate(Main) {
                                 popUpTo(Login) { inclusive = true }
                             }
@@ -48,11 +47,25 @@ fun NavigationWrapper(sessionViewModel: SessionViewModel = hiltViewModel()) {
                 }
 
                 composable<Register> {
-                    RegisterScreen()
+                    RegisterScreen(onPressBackArrow = {
+                        navController.navigate(Login) {
+                            popUpTo(Login) { inclusive = true }
+                        }
+                    })
                 }
 
                 composable<Main> {
-                    MainScreen()
+                    MainScreen(onPressDiscover = {
+                        navController.navigate(Benefits)
+                    })
+                }
+
+                composable<Benefits> {
+                    BenefitScreen(onBack = {
+                        navController.navigate(Main) {
+                            popUpTo(Main) { inclusive = true }
+                        }
+                    })
                 }
             }
         }
