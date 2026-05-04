@@ -5,5 +5,6 @@ data class BannerEntity(
     val imageUrl: String,
     val title: String,
     val subtitle: String,
-    val priority: Int
+    val priority: Int,
+    val localPath: String? = null
 )

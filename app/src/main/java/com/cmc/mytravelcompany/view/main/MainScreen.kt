@@ -1,5 +1,11 @@
 package com.cmc.mytravelcompany.view.main
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -34,9 +41,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import coil.request.CachePolicy
+import coil.compose.AsyncImagePainter
 import coil.request.ImageRequest
 import com.cmc.mytravelcompany.domain.entity.BannerEntity
+import java.io.File
 
 @Composable
 fun MainScreen(
@@ -54,8 +62,6 @@ fun MainScreen(
             }
         }, containerColor = Color.Transparent
     ) { padding ->
-
-
         Box(modifier = Modifier.fillMaxSize()) {
             Box(
                 modifier = Modifier
@@ -71,7 +77,7 @@ fun MainScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.6f)
+                        .fillMaxHeight(0.8f)
                         .padding(top = padding.calculateTopPadding())
                 ) {
                     if (uiState.isLoadingBanners) {
@@ -114,6 +120,13 @@ fun BannerPager(banners: List<BannerEntity>, modifier: Modifier = Modifier) {
 @Composable
 fun BannerItem(banner: BannerEntity) {
     var titleSize by remember(banner.title) { mutableStateOf(20.sp) }
+    var isImageLoading by remember { mutableStateOf(true) }
+
+    // Usamos el archivo local si existe, sino la URL remota
+    val imageData = remember(banner.localPath, banner.imageUrl) {
+        val file = banner.localPath?.let { File(it) }
+        if (file != null && file.exists()) file else banner.imageUrl
+    }
 
     Card(
         modifier = Modifier
@@ -123,17 +136,29 @@ fun BannerItem(banner: BannerEntity) {
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
+            
+            // Shimmer de fondo mientras carga
+            if (isImageLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(shimmerBrush())
+                )
+            }
+
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(banner.imageUrl)
+                    .data(imageData)
                     .crossfade(true)
-                    .diskCachePolicy(CachePolicy.ENABLED)
-                    .memoryCachePolicy(CachePolicy.ENABLED)
                     .build(),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                onState = { state ->
+                    isImageLoading = state is AsyncImagePainter.State.Loading
+                }
             )
+            
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -173,3 +198,35 @@ fun BannerItem(banner: BannerEntity) {
     }
 }
 
+@Composable
+fun shimmerBrush(showShimmer: Boolean = true, targetValue: Float = 1000f): Brush {
+    return if (showShimmer) {
+        val shimmerColors = listOf(
+            Color.LightGray.copy(alpha = 0.6f),
+            Color.LightGray.copy(alpha = 0.2f),
+            Color.LightGray.copy(alpha = 0.6f),
+        )
+
+        val transition = rememberInfiniteTransition(label = "shimmer")
+        val translateAnimation = transition.animateFloat(
+            initialValue = 0f,
+            targetValue = targetValue,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 1000, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart
+            ), label = "shimmer"
+        )
+
+        Brush.linearGradient(
+            colors = shimmerColors,
+            start = Offset.Zero,
+            end = Offset(x = translateAnimation.value, y = translateAnimation.value)
+        )
+    } else {
+        Brush.linearGradient(
+            colors = listOf(Color.Transparent, Color.Transparent),
+            start = Offset.Zero,
+            end = Offset.Zero
+        )
+    }
+}

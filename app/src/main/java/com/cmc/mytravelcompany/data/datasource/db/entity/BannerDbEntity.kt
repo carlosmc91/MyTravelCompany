@@ -10,7 +10,8 @@ data class BannerDbEntity(
     val imageUrl: String,
     val title: String,
     val subtitle: String,
-    val priority: Int
+    val priority: Int,
+    val localPath: String? = null
 )
 
 fun BannerDbEntity.toDomain() = BannerEntity(
@@ -18,7 +19,8 @@ fun BannerDbEntity.toDomain() = BannerEntity(
     imageUrl = imageUrl,
     title = title,
     subtitle = subtitle,
-    priority = priority
+    priority = priority,
+    localPath = localPath
 )
 
 fun BannerEntity.toDb() = BannerDbEntity(
@@ -26,5 +28,6 @@ fun BannerEntity.toDb() = BannerDbEntity(
     imageUrl = imageUrl,
     title = title,
     subtitle = subtitle,
-    priority = priority
+    priority = priority,
+    localPath = localPath
 )
