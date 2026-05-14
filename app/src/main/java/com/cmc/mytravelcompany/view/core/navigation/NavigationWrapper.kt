@@ -30,11 +30,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.cmc.mytravelcompany.R
 import com.cmc.mytravelcompany.view.auth.login.LoginScreen
 import com.cmc.mytravelcompany.view.auth.register.RegisterScreen
 import com.cmc.mytravelcompany.view.benefits.BenefitScreen
 import com.cmc.mytravelcompany.view.core.components.MyBackgroundRegister
+import com.cmc.mytravelcompany.view.destination.DestinationScreen
 import com.cmc.mytravelcompany.view.main.MainScreen
 import com.cmc.mytravelcompany.view.main.MainViewModel
 import kotlinx.coroutines.launch
@@ -125,9 +127,16 @@ fun NavGraphBuilder.addAppGraphs(
         })
     }
 
-    composable<Moon> { NavPlaceholder("Luna de Miel", onOpenDrawer) }
-    composable<Maldivas> { NavPlaceholder("Maldivas", onOpenDrawer) }
-    composable<Japan> { NavPlaceholder("Japón", onOpenDrawer) }
+    // Nueva ruta dinámica que maneja todos los destinos de Firebase
+    composable<DestinationDetail> {backStackEntry ->
+        val detail = backStackEntry.toRoute<DestinationDetail>()
+        DestinationScreen(onPressBackArrow = {
+            navController.navigate(Main) {
+                popUpTo(Main) { inclusive = true }
+            }
+        })
+    }
+
     composable<Others> { NavPlaceholder("Otros Destinos", onOpenDrawer) }
     composable<Solution> { NavPlaceholder("A medida", onOpenDrawer) }
     composable<Ask> { NavPlaceholder("¿Quiénes somos?", onOpenDrawer) }

@@ -15,6 +15,9 @@ object Main
 object Benefits
 
 @Serializable
+data class DestinationDetail(val id: String)
+
+@Serializable
 object Moon
 
 @Serializable

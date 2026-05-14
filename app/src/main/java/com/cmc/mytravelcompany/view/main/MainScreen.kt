@@ -1,49 +1,60 @@
 package com.cmc.mytravelcompany.view.main
 
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.request.ImageRequest
 import com.cmc.mytravelcompany.domain.entity.BannerEntity
+import com.cmc.mytravelcompany.view.core.components.CmcButtonBorderMain
+import com.example.ui.theme.GothamFamily
+import kotlinx.coroutines.delay
 import java.io.File
 
 @Composable
@@ -52,34 +63,15 @@ fun MainScreen(
     onOpenDrawer: () -> Unit,
 ) {
     val uiState by mainViewModel.mainUiState.collectAsStateWithLifecycle()
-    val deepGoldStart = MaterialTheme.colorScheme.primary
-    val deepGoldEnd = MaterialTheme.colorScheme.background
 
     Scaffold(
         topBar = {
             MyTopAppBar {
                 onOpenDrawer()
             }
-        }, containerColor = Color.Transparent
-    ) { padding ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(deepGoldStart, deepGoldEnd)
-                        )
-                    )
-            )
-
-            Column {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.8f)
-                        .padding(top = padding.calculateTopPadding())
-                ) {
+        }, containerColor = Color.Transparent, content = { _ ->
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.fillMaxSize()) {
                     if (uiState.isLoadingBanners) {
                         Box(
                             modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
@@ -87,9 +79,96 @@ fun MainScreen(
                             CircularProgressIndicator(color = Color.White)
                         }
                     } else if (uiState.banners.isNotEmpty()) {
-                        BannerPager(
-                            banners = uiState.banners, modifier = Modifier.fillMaxSize()
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                        ) {
+                            BannerPager(
+                                banners = uiState.banners, modifier = Modifier.fillMaxSize()
+                            )
+
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Text(
+                                    textAlign = TextAlign.Center,
+                                    text = buildAnnotatedString {
+                                        withStyle(
+                                            style = SpanStyle(
+                                                fontFamily = GothamFamily,
+                                                fontWeight = FontWeight.Normal,
+                                                color = Color.White
+                                            )
+                                        ) {
+                                            append("VIAJES ")
+                                        }
+                                        withStyle(
+                                            style = SpanStyle(
+                                                fontFamily = GothamFamily,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color(0xFFF9E899)
+                                            )
+                                        ) {
+                                            append("PERSONALIZADOS")
+                                        }
+                                    },
+                                    fontSize = 28.sp,
+                                    style = TextStyle(
+                                        shadow = Shadow(
+                                            color = Color.Black.copy(alpha = 0.95f),
+                                            offset = Offset(0f, 2f),
+                                            blurRadius = 15f
+                                        )
+                                    )
+                                )
+
+                                Spacer(modifier = Modifier.size(35.dp))
+
+                                Text(
+                                    textAlign = TextAlign.Center,
+                                    text = buildAnnotatedString {
+                                        withStyle(
+                                            style = SpanStyle(
+                                                fontFamily = GothamFamily,
+                                                fontWeight = FontWeight.Normal,
+                                                color = Color.White
+                                            )
+                                        ) {
+                                            append("ESPECIALISTAS EN VIAJES PERSONALIZADOS ")
+                                        }
+                                        withStyle(
+                                            style = SpanStyle(
+                                                fontFamily = GothamFamily,
+                                                fontWeight = FontWeight.Bold,
+                                                color = Color.White
+                                            )
+                                        ) {
+                                            append("Y A MEDIDA QUE CONVIERTEN TUS SUEÑOS EN REALIDAD")
+                                        }
+                                    },
+                                    fontSize = 17.sp,
+                                    style = TextStyle(
+                                        shadow = Shadow(
+                                            color = Color.Black.copy(alpha = 0.85f),
+                                            offset = Offset(0f, 1f),
+                                            blurRadius = 12f
+                                        )
+                                    )
+                                )
+                            }
+
+                            Box(
+                                modifier = Modifier.fillMaxSize().padding(bottom = 40.dp),
+                                contentAlignment = Alignment.BottomCenter
+                            ) {
+                                CmcButtonBorderMain(
+                                    text = "CUÉNTANOS TU SUEÑO",
+                                    color = MaterialTheme.colorScheme.primary
+                                ) {
+                                    // Acción del botón
+                                }
+                            }
+                        }
                     } else {
                         Box(
                             modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
@@ -100,50 +179,72 @@ fun MainScreen(
                 }
             }
         }
-    }
+    )
 }
 
 @Composable
 fun BannerPager(banners: List<BannerEntity>, modifier: Modifier = Modifier) {
-    val pagerState = rememberPagerState(pageCount = { banners.size })
+    if (banners.size <= 1) {
+        val pagerState = rememberPagerState(pageCount = { banners.size })
+        HorizontalPager(
+            state = pagerState,
+            modifier = modifier.fillMaxSize()
+        ) { index ->
+            BannerItem(banners[index])
+        }
+        return
+    }
+
+    val displayBanners = remember(banners) {
+        listOf(banners.last()) + banners + listOf(banners.first())
+    }
+
+    val pagerState = rememberPagerState(
+        initialPage = 1,
+        pageCount = { displayBanners.size }
+    )
+
+    LaunchedEffect(pagerState.settledPage) {
+        when (pagerState.settledPage) {
+            0 -> pagerState.scrollToPage(banners.size)
+            displayBanners.size - 1 -> pagerState.scrollToPage(1)
+        }
+    }
+
+    LaunchedEffect(pagerState.settledPage) {
+        delay(10000L)
+        if (!pagerState.isScrollInProgress) {
+            val nextPage = pagerState.currentPage + 1
+            pagerState.animateScrollToPage(nextPage)
+        }
+    }
 
     HorizontalPager(
         state = pagerState,
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(horizontal = 5.dp),
-        pageSpacing = 5.dp
+        beyondViewportPageCount = 1
     ) { page ->
-        BannerItem(banners[page])
+        BannerItem(displayBanners[page])
     }
 }
 
 @Composable
 fun BannerItem(banner: BannerEntity) {
-    var titleSize by remember(banner.title) { mutableStateOf(20.sp) }
     var isImageLoading by remember { mutableStateOf(true) }
 
-    // Usamos el archivo local si existe, sino la URL remota
     val imageData = remember(banner.localPath, banner.imageUrl) {
         val file = banner.localPath?.let { File(it) }
         if (file != null && file.exists()) file else banner.imageUrl
     }
 
     Card(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(5.dp),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        modifier = Modifier.fillMaxSize(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        shape = androidx.compose.ui.graphics.RectangleShape 
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            
-            // Shimmer de fondo mientras carga
             if (isImageLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(shimmerBrush())
-                )
+                Box(modifier = Modifier.fillMaxSize())
             }
 
             AsyncImage(
@@ -156,77 +257,47 @@ fun BannerItem(banner: BannerEntity) {
                 contentScale = ContentScale.Crop,
                 onState = { state ->
                     isImageLoading = state is AsyncImagePainter.State.Loading
-                }
-            )
-            
-            Box(
+                })
+
+            Surface(
+                color = Color(0x904A4D3B),
+                shape = CircleShape,
+                border = BorderStroke(1.dp, Color(0xFF9EA388)),
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.6f)),
-                            startY = 300f
-                        )
-                    )
-            )
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(12.dp)
+                    .align(BiasAlignment(horizontalBias = -0.9f, verticalBias = -0.7f))
+                    .padding(16.dp),
             ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = banner.title,
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = titleSize,
-                    maxLines = 1,
-                    softWrap = false,
-                    onTextLayout = { textLayoutResult ->
-                        if (textLayoutResult.didOverflowWidth) {
-                            titleSize *= 0.9f
-                        }
-                    })
-                Text(
-                    text = banner.subtitle,
-                    color = Color.White.copy(alpha = 0.8f),
-                    fontSize = 13.sp,
-                    maxLines = 1
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 25.dp, vertical = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.LocationOn,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(35.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Column {
+                        Text(
+                            text = banner.title,
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.5.sp
+                        )
+                        Text(
+                            text = banner.subtitle,
+                            color = Color.White,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+                }
             }
         }
-    }
-}
-
-@Composable
-fun shimmerBrush(showShimmer: Boolean = true, targetValue: Float = 1000f): Brush {
-    return if (showShimmer) {
-        val shimmerColors = listOf(
-            Color.LightGray.copy(alpha = 0.6f),
-            Color.LightGray.copy(alpha = 0.2f),
-            Color.LightGray.copy(alpha = 0.6f),
-        )
-
-        val transition = rememberInfiniteTransition(label = "shimmer")
-        val translateAnimation = transition.animateFloat(
-            initialValue = 0f,
-            targetValue = targetValue,
-            animationSpec = infiniteRepeatable(
-                animation = tween(durationMillis = 1000, easing = LinearEasing),
-                repeatMode = RepeatMode.Restart
-            ), label = "shimmer"
-        )
-
-        Brush.linearGradient(
-            colors = shimmerColors,
-            start = Offset.Zero,
-            end = Offset(x = translateAnimation.value, y = translateAnimation.value)
-        )
-    } else {
-        Brush.linearGradient(
-            colors = listOf(Color.Transparent, Color.Transparent),
-            start = Offset.Zero,
-            end = Offset.Zero
-        )
     }
 }

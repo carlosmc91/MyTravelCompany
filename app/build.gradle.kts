@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation)
     implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.material3)
     ksp(libs.hilt.android.compiler)
 
     //Firebase

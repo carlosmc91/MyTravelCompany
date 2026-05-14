@@ -2,11 +2,13 @@ package com.cmc.mytravelcompany.data.di
 
 import com.cmc.mytravelcompany.data.datasource.api.ApiService
 import com.cmc.mytravelcompany.data.repository.BannerRepositoryImpl
+import com.cmc.mytravelcompany.data.repository.DestinationRepositoryImpl
 import com.cmc.mytravelcompany.data.repository.FirebaseAuthRepositoryImpl
 import com.cmc.mytravelcompany.data.repository.LocalBenefitRepository
 import com.cmc.mytravelcompany.domain.repository.AuthRepository
 import com.cmc.mytravelcompany.domain.repository.BannerRepository
 import com.cmc.mytravelcompany.domain.repository.BenefitRepository
+import com.cmc.mytravelcompany.domain.repository.DestinationRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Binds
@@ -35,6 +37,13 @@ abstract class DataModule {
     abstract fun bindBannerRepository(
         impl: BannerRepositoryImpl
     ): BannerRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDestinationRepository(
+        impl: DestinationRepositoryImpl
+    ): DestinationRepository
+
 
     @Binds
     @Singleton

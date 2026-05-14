@@ -1,7 +1,7 @@
 package com.cmc.mytravelcompany.ui.theme
 import androidx.compose.ui.graphics.Color
 
-val primaryLight = Color(0xFF725C0C)
+val primaryLight = Color(0xFFB7A353)
 val onPrimaryLight = Color(0xFFFFFFFF)
 val primaryContainerLight = Color(0xFFFFE088)
 val onPrimaryContainerLight = Color(0xFF574500)

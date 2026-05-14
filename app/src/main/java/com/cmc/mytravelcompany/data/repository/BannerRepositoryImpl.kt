@@ -10,10 +10,7 @@ import com.cmc.mytravelcompany.domain.repository.BannerRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -27,31 +24,28 @@ class BannerRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : BannerRepository {
 
-    override fun getBanners(): Flow<List<BannerEntity>> {
-        return bannerDao.getAllBanners()
-            .map { list -> list.map { it.toDomain() } }
-            .onStart {
-                if (cacheManager.shouldRefreshBanners()) {
-                    try {
-                        refreshBannersFromRemote()
-                        cacheManager.updateBannersTimestamp()
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
+    override suspend fun getBanners(): List<BannerEntity> {
+        if (cacheManager.shouldRefreshBanners()) {
+            try {
+                refreshBannersFromRemote()
+                cacheManager.updateBannersTimestamp()
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+        }
+        return bannerDao.getAllBanners().first().map { it.toDomain() }
     }
 
     private suspend fun refreshBannersFromRemote() {
         // Obtenemos lo que tenemos actualmente en Room para comparar
         val currentLocalBanners = bannerDao.getAllBanners().first().associateBy { it.id }
 
-        val snapshot = firestore.collection("banners")
+        val firestoreCall = firestore.collection("banners")
             .orderBy("priority")
             .get()
             .await()
 
-        val remoteBanners = snapshot.documents.mapNotNull { doc ->
+        val remoteBanners = firestoreCall.documents.mapNotNull { doc ->
             val id = doc.id
             val remoteImageUrl = doc.getString("imageUrl") ?: ""
             val localBanner = currentLocalBanners[id]

@@ -15,12 +15,8 @@ class RetrofitAuthRepositoryImpl @Inject constructor(
 
     override suspend fun login(email: String, password: String): Result<UserEntity> {
         return try {
-            // Simulamos el login con tu API actual
             val response = api.doLogin()
-            // Tomamos uno al azar como hacías antes y lo pasamos a dominio
-            val user = response.random().toDomain()
-            
-            // EL REPOSITORIO GUARDA LA SESIÓN
+            val user = response[0].toDomain()
             sessionManager.saveUser(user)
             
             Result.success(user)

@@ -12,7 +12,20 @@
           "package_name": "com.cmc.mytravelcompany"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "681575025178-8gpq36kcnqf02hpodhkm3uq5k518v4g5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cmc.mytravelcompany",
+            "certificate_hash": "6240311f2cfe64504feed98b51df0f366d68269c"
+          }
+        },
+        {
+          "client_id": "681575025178-uvg5frlic71dtrd81g4ha3rjubivmdj9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAlpcRqHxOH7rrcXLVBv3qZjPVobytvAyM"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681575025178-uvg5frlic71dtrd81g4ha3rjubivmdj9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

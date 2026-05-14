@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -85,103 +87,102 @@ fun CmcNavigationDrawer(
 
                 Spacer(Modifier.height(12.dp))
 
-                Text(
-                    stringResource(R.string.navigation_drawer_travel_with_us),
-                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(
+                        stringResource(R.string.navigation_drawer_travel_with_us),
+                        modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
 
-                // Sección 1: Destinos
-                DrawerItem(
-                    label = stringResource(R.string.navigation_drawer_moon),
-                    isSelected = currentDestination?.hasRoute<Moon>() == true,
-                    onClick = {
-                        onNavigate(Moon)
-                        scope.launch { drawerState.close() }
+                    // Sección 1: Destinos DINÁMICOS desde Firestore
+                    uiState.destinations.forEach { destination ->
+                        DrawerItem(
+                            label = destination.name,
+                            isSelected = currentDestination?.hasRoute<DestinationDetail>() == true &&
+                                    navBackStackEntryContainsId(currentDestination, destination.id),
+                            onClick = {
+                                onNavigate(DestinationDetail(id = destination.id))
+                                scope.launch { drawerState.close() }
+                            }
+                        )
                     }
-                )
 
-                DrawerItem(
-                    label = stringResource(R.string.navigation_drawer_maldivas),
-                    isSelected = currentDestination?.hasRoute<Maldivas>() == true,
-                    onClick = {
-                        onNavigate(Maldivas)
-                        scope.launch { drawerState.close() }
-                    }
-                )
+                    DrawerItem(
+                        label = stringResource(R.string.navigation_drawer_others),
+                        isSelected = currentDestination?.hasRoute<Others>() == true,
+                        onClick = {
+                            onNavigate(Others)
+                            scope.launch { drawerState.close() }
+                        }
+                    )
 
-                DrawerItem(
-                    label = stringResource(R.string.navigation_drawer_japan),
-                    isSelected = currentDestination?.hasRoute<Japan>() == true,
-                    onClick = {
-                        onNavigate(Japan)
-                        scope.launch { drawerState.close() }
-                    }
-                )
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 28.dp))
 
-                DrawerItem(
-                    label = stringResource(R.string.navigation_drawer_others),
-                    isSelected = currentDestination?.hasRoute<Others>() == true,
-                    onClick = {
-                        onNavigate(Others)
-                        scope.launch { drawerState.close() }
-                    }
-                )
+                    Text(
+                        stringResource(R.string.navigation_drawer_options),
+                        modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
 
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 28.dp))
+                    DrawerItem(
+                        label = stringResource(R.string.navigation_drawer_solution),
+                        isSelected = currentDestination?.hasRoute<Solution>() == true,
+                        onClick = {
+                            onNavigate(Solution)
+                            scope.launch { drawerState.close() }
+                        }
+                    )
 
-                Text(
-                    stringResource(R.string.navigation_drawer_options),
-                    modifier = Modifier.padding(horizontal = 28.dp, vertical = 16.dp),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                    DrawerItem(
+                        label = stringResource(R.string.navigation_drawer_ask),
+                        isSelected = currentDestination?.hasRoute<Ask>() == true,
+                        onClick = {
+                            onNavigate(Ask)
+                            scope.launch { drawerState.close() }
+                        }
+                    )
 
-                DrawerItem(
-                    label = stringResource(R.string.navigation_drawer_solution),
-                    isSelected = currentDestination?.hasRoute<Solution>() == true,
-                    onClick = {
-                        onNavigate(Solution)
-                        scope.launch { drawerState.close() }
-                    }
-                )
+                    DrawerItem(
+                        label = stringResource(R.string.navigation_drawer_frecuentes),
+                        isSelected = currentDestination?.hasRoute<Frecuentes>() == true,
+                        onClick = {
+                            onNavigate(Frecuentes)
+                            scope.launch { drawerState.close() }
+                        }
+                    )
 
-                DrawerItem(
-                    label = stringResource(R.string.navigation_drawer_ask),
-                    isSelected = currentDestination?.hasRoute<Ask>() == true,
-                    onClick = {
-                        onNavigate(Ask)
-                        scope.launch { drawerState.close() }
-                    }
-                )
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 28.dp))
 
-                DrawerItem(
-                    label = stringResource(R.string.navigation_drawer_frecuentes),
-                    isSelected = currentDestination?.hasRoute<Frecuentes>() == true,
-                    onClick = {
-                        onNavigate(Frecuentes)
-                        scope.launch { drawerState.close() }
-                    }
-                )
-
-                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp, horizontal = 28.dp))
-
-                DrawerItem(
-                    label = "Beneficios",
-                    isSelected = currentDestination?.hasRoute<Benefits>() == true,
-                    onClick = {
-                        onNavigate(Benefits)
-                        scope.launch { drawerState.close() }
-                    }
-                )
+                    DrawerItem(
+                        label = "Beneficios",
+                        isSelected = currentDestination?.hasRoute<Benefits>() == true,
+                        onClick = {
+                            onNavigate(Benefits)
+                            scope.launch { drawerState.close() }
+                        }
+                    )
+                }
             }
         },
         drawerState = drawerState,
         content = content
     )
+}
+
+// Función auxiliar para saber si el destino actual coincide con el ID seleccionado
+private fun navBackStackEntryContainsId(destination: NavDestination?, id: String): Boolean {
+    // Nota: Esto es simplificado, en una implementación real
+    // podrías mirar los argumentos del NavBackStackEntry si fuera necesario.
+    return false
 }
 
 @Composable

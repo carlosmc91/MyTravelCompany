@@ -1,15 +1,19 @@
 package com.cmc.mytravelcompany.view.main
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.cmc.mytravelcompany.domain.entity.BannerEntity
+import com.cmc.mytravelcompany.domain.entity.DestinationEntity
 import com.cmc.mytravelcompany.domain.entity.UserEntity
 import com.cmc.mytravelcompany.domain.usecase.GetBannersUseCase
+import com.cmc.mytravelcompany.domain.usecase.GetDestinationsUseCase
 import com.cmc.mytravelcompany.domain.usecase.GetSession
 import com.cmc.mytravelcompany.domain.usecase.Logout
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +29,7 @@ class MainViewModel @Inject constructor(
     private val getSession: GetSession,
     private val logOut: Logout,
     private val getBannersUseCase: GetBannersUseCase,
+    private val getDestinationsUseCase: GetDestinationsUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -33,6 +39,7 @@ class MainViewModel @Inject constructor(
     init {
         loadUserSession()
         loadBanners()
+        loadDestinations()
     }
 
     private fun loadUserSession() {
@@ -46,15 +53,30 @@ class MainViewModel @Inject constructor(
     private fun loadBanners() {
         viewModelScope.launch {
             _mainUiState.update { it.copy(isLoadingBanners = true) }
-            // Ahora nos suscribimos al Flow de banners
-            getBannersUseCase().collect { banners ->
-                _mainUiState.update { 
+            try {
+                // Ahora es una función suspend, se asigna el resultado directamente
+                val banners = getBannersUseCase()
+                _mainUiState.update {
                     it.copy(
-                        banners = banners, 
-                        isLoadingBanners = false 
-                    ) 
+                        banners = banners,
+                        isLoadingBanners = false
+                    )
                 }
                 preloadImages(banners)
+            } catch (e: Exception) {
+                _mainUiState.update { it.copy(isLoadingBanners = false) }
+                Log.e("MainViewModel", "Error loading banners", e)
+            }
+        }
+    }
+
+    private fun loadDestinations() {
+        viewModelScope.launch {
+            try {
+                val destinations = getDestinationsUseCase()
+                _mainUiState.update { it.copy(destinations = destinations) }
+            } catch (e: Exception) {
+                Log.e("MainViewModel", "Error loading destinations", e)
             }
         }
     }
@@ -78,5 +100,6 @@ class MainViewModel @Inject constructor(
 data class MainUiState(
     val user: UserEntity? = null,
     val banners: List<BannerEntity> = emptyList(),
+    val destinations: List<DestinationEntity> = emptyList(),
     val isLoadingBanners: Boolean = false
 )
